@@ -5,18 +5,85 @@
       "source": "/(.*)",
       "headers": [
         {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        },
-        {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
         },
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en/index.html",
+      "destination": "/en/",
+      "permanent": true
+    },
+    {
+      "source": "/de/index.html",
+      "destination": "/de/",
+      "permanent": true
+    },
+    {
+      "source": "/ru/index.html",
+      "destination": "/ru/",
+      "permanent": true
+    },
+    {
+      "source": "/pl/index.html",
+      "destination": "/pl/",
+      "permanent": true
+    },
+    {
+      "source": "/hu/index.html",
+      "destination": "/hu/",
+      "permanent": true
+    },
+    {
+      "source": "/uk/index.html",
+      "destination": "/uk/",
+      "permanent": true
+    },
+    {
+      "source": "/it/index.html",
+      "destination": "/it/",
+      "permanent": true
+    },
+    {
+      "source": "/fr/index.html",
+      "destination": "/fr/",
+      "permanent": true
+    },
+    {
+      "source": "/es/index.html",
+      "destination": "/es/",
+      "permanent": true
+    },
+    {
+      "source": "/zh/index.html",
+      "destination": "/zh/",
+      "permanent": true
+    },
+    {
+      "source": "/ja/index.html",
+      "destination": "/ja/",
+      "permanent": true
+    },
+    {
+      "source": "/ar/index.html",
+      "destination": "/ar/",
+      "permanent": true
     }
   ]
 }
