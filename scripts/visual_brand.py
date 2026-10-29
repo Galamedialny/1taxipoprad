@@ -70,3 +70,8 @@ def enhance(root):
 
  from world_brand import apply
  apply(root)
+
+ for el in root.iter():
+  for attr in ['href','content']:
+   value=el.get(attr)
+   if value and (value.startswith('/') or value.startswith('https://1taxipoprad.sk/')):el.set(attr,value.replace('.html',''))

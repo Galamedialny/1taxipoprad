@@ -17,7 +17,7 @@ def tr(s,lang):
  if lang=='sk':return s
  if s.strip() in ids:return s.replace(s.strip(),bundle['locales'][lang].get(ids[s.strip()],s.strip()))
  return s
-def pagepath(lang,f):return ('/' if lang=='sk' else '/'+lang+'/')+('' if f=='index.html' else f)
+def pagepath(lang,f):return ('/' if lang=='sk' else '/'+lang+'/')+('' if f=='index.html' else f.removesuffix('.html'))
 def url(lang,f):return origin+pagepath(lang,f)
 def meta(head,name,content,prop=False):
  key='property' if prop else 'name';old=head.xpath(f'meta[@{key}="{name}"]')
@@ -123,6 +123,7 @@ for block in config.get('headers',[]):block['headers']=[h for h in block['header
 if not live:config['headers'][0]['headers'].append({'key':'X-Robots-Tag','value':'noindex, nofollow'})
 # Permanently normalize the duplicate index URL while preserving historic .html pages.
 config['redirects']=[{'source':'/index.html','destination':'/','permanent':True}]+[{'source':'/'+lang+'/index.html','destination':'/'+lang+'/','permanent':True} for lang in locales if lang!='sk']
+config['cleanUrls']=True
 (p/'vercel.json').write_text(json.dumps(config,indent=2))
 (p/'site.webmanifest').write_text(json.dumps({'name':'1 Taxi Poprad','short_name':'1Taxi','start_url':'/','display':'browser','background_color':'#090909','theme_color':'#090909','icons':[{'src':'/assets/icon-192.png','sizes':'192x192','type':'image/png'},{'src':'/assets/icon-512.png','sizes':'512x512','type':'image/png'}]}))
 print('Generated 52 static pages, 4 OG cards, favicons, schema and sitemap; mode:', 'LIVE' if live else 'PREVIEW / NOINDEX')

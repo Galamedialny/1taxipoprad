@@ -41,7 +41,7 @@ document.querySelector('#photo-dialog')?.remove();
  const analyticsCheck=document.createElement('input');analyticsCheck.type='checkbox';analyticsCheck.checked=saved?.allowed===true;
  const mapsCheck=document.createElement('input');mapsCheck.type='checkbox';mapsCheck.checked=saved?.maps===true;
  [[analyticsCheck,sk?'Analytika · Google Analytics':'Analytics · Google Analytics'],[mapsCheck,sk?'Externý obsah · Google Mapy':'External content · Google Maps']].forEach(([input,label])=>{const l=document.createElement('label');l.append(input,document.createTextNode(label));options.append(l);});
- const notice=document.createElement('a');notice.href='/cookies.html';notice.textContent=sk?'Podrobnosti o cookies a ochrane údajov':'Cookie and privacy details';options.append(notice);
+ const notice=document.createElement('a');notice.href='/cookies';notice.textContent=sk?'Podrobnosti o cookies a ochrane údajov':'Cookie and privacy details';options.append(notice);
 
  function choose(value,maps=false){allowed=value;window.taxiMaps(maps);try{localStorage.setItem(KEY,JSON.stringify({allowed:value,maps:maps,time:Date.now()}));}catch{}if(value)enable();else{window['ga-disable-'+ID]=true;if(loaded)window.gtag('consent','update',{analytics_storage:'denied'});clearCookies();}panel.hidden=true;settings.focus();}
  const accept=document.createElement('button');accept.type='button';accept.textContent=sk?'Uložiť výber':'Save choices';accept.onclick=()=>choose(analyticsCheck.checked,mapsCheck.checked);
