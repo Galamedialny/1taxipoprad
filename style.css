@@ -96,3 +96,5 @@ footer .seo-language-links{display:flex!important;flex-direction:row!important;f
 
 .hero h1{font-size:clamp(57px,6vw,88px)}.hero-photo{object-position:center;filter:none}.airport-tagline{display:block;color:#ff9a94;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}@media(max-width:700px){.hero h1{font-size:clamp(49px,12vw,76px)}.hero-visual{height:330px}}
 .hero .hero-visual{height:auto;aspect-ratio:3/2}.hero .hero-photo{object-fit:contain;background:#131313}.hero .photo-label{bottom:15px;left:20px}.hero .photo-label strong{font-size:20px}
+
+.car{cursor:default}div.car{font:inherit;text-align:inherit}
