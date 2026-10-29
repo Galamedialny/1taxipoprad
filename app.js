@@ -76,3 +76,6 @@ document.querySelector('#photo-dialog')?.remove();
 })();
 
 (()=>{const paths=['<path d="m5 8 2-5h10l2 5M3 8h18v10H3zM5 18v3m14-3v3M3 12h18"/><circle cx="7" cy="15" r="1"/><circle cx="17" cy="15" r="1"/>','<path d="m22 2-7 20-4-9-9-4 20-7zM22 2 11 13"/>','<circle cx="9" cy="7" r="3"/><path d="M3 21v-4a6 6 0 0 1 12 0v4M16 4a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5v2"/>'];document.querySelectorAll('#sluzby .service-grid .number').forEach((el,i)=>{if(!paths[i])return;el.textContent='';const svg=new DOMParser().parseFromString('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[i]+'</svg>','image/svg+xml').documentElement;el.append(document.importNode(svg,true));el.setAttribute('aria-hidden','true');});})();
+
+// Responsive service strip: real elements avoid clipped text and emoji separators.
+document.querySelectorAll('.ticker > div').forEach(track=>{const labels=[...track.childNodes].filter(node=>node.nodeType===3).map(node=>node.textContent.trim()).filter(Boolean).slice(0,4);if(labels.length!==4)return;track.replaceChildren();labels.forEach(label=>{const item=document.createElement('span');item.className='ticker-item';item.textContent=label;track.append(item);});});
