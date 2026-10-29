@@ -4,6 +4,7 @@ Default is preview/noindex. --live explicitly enables indexing for launch.
 """
 from pathlib import Path
 from lxml import html,etree
+from visual_brand import enhance
 from PIL import Image,ImageDraw,ImageFont,ImageOps
 import json,re,copy,sys
 p=Path(__file__).resolve().parents[1]
@@ -104,6 +105,7 @@ for lang in locales:
   for code,country,name in [['sk', 'sk', 'Slovenčina'], ['en', 'gb', 'English'], ['de', 'de', 'Deutsch'], ['ru', 'ru', 'Русский'], ['pl', 'pl', 'Polski'], ['hu', 'hu', 'Magyar'], ['uk', 'ua', 'Українська'], ['it', 'it', 'Italiano'], ['fr', 'fr', 'Français'], ['es', 'es', 'Español'], ['zh', 'cn', '中文'], ['ja', 'jp', '日本語'], ['ar', 'sa', 'العربية']]:
    a=etree.SubElement(language_nav,'a',href=pagepath(code,f),hreflang=code,lang=code);a.text=name
   dest=p/f if lang=='sk' else p/lang/f;dest.parent.mkdir(exist_ok=True)
+  enhance(root)
   dest.write_text('<!doctype html>\n'+html.tostring(root,encoding='unicode',method='html'))
 ns='http://www.sitemaps.org/schemas/sitemap/0.9';xhtml='http://www.w3.org/1999/xhtml';image_ns='http://www.google.com/schemas/sitemap-image/1.1'
 site=etree.Element('{'+ns+'}urlset',nsmap={None:ns,'xhtml':xhtml,'image':image_ns})
