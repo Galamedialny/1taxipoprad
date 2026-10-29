@@ -60,3 +60,13 @@ def enhance(root):
  for i,section in enumerate(sections):
   tone='tone-red' if i%2==0 else 'tone-white';idx=main.index(section);main.remove(section);band=etree.Element('div',{'class':'section-band '+tone});main.insert(idx,band);band.append(section)
   ornament=etree.SubElement(band,'span',{'class':'section-ornament','aria-hidden':'true'});etree.SubElement(ornament,'img',src='/assets/logo.png',alt='',loading='lazy')
+
+ # Third-party resources stay blocked until explicit consent.
+ for el in root.xpath('//link[@rel="preconnect"]'):el.getparent().remove(el)
+ for el in root.xpath('//iframe[contains(@src,"google.com")]'):
+  el.set('data-consent-src',el.get('src'));del el.attrib['src'];el.set('hidden','hidden')
+ nav=etree.SubElement(root.find('body').find('footer'),'nav',{'class':'legal-links wrap','aria-label':'Legal / Právne informácie'})
+ for href,label in [('ochrana-osobnych-udajov.html','Ochrana osobných údajov / Privacy'),('cookies.html','Cookies'),('podmienky.html','Podmienky objednávania')]:etree.SubElement(nav,'a',href='/'+href).text=label
+
+ from world_brand import apply
+ apply(root)

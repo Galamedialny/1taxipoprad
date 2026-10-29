@@ -1,9 +1,12 @@
 const toggle=document.querySelector('.menu-toggle');const nav=document.querySelector('#navigation');toggle?.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',window.taxiTranslate?window.taxiTranslate(4):(open?'Zavrieť menu':'Otvoriť menu'));nav.classList.toggle('is-open',open)});document.addEventListener('keydown',e=>{if(e.key==='Escape'){toggle?.setAttribute('aria-expanded','false');nav?.classList.remove('is-open')}});const dialog=document.querySelector('#photo-dialog');document.querySelectorAll('[data-photo]').forEach(button=>button.addEventListener('click',()=>{dialog.querySelector('img').src=button.dataset.photo;dialog.querySelector('img').alt=button.dataset.caption;dialog.querySelector('p').textContent=button.dataset.caption;dialog.showModal()}));dialog?.querySelector('.dialog-close').addEventListener('click',()=>dialog.close());dialog?.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 
 
+// External maps are opt-in and independent of analytics.
+(()=>{const sk=document.documentElement.lang==='sk';window.taxiMaps=function(on){document.querySelectorAll('iframe[data-consent-src]').forEach(frame=>{let gate=frame.previousElementSibling;if(!gate?.classList.contains('map-consent')){gate=document.createElement('div');gate.className='map-consent';const title=document.createElement('h3');title.textContent=sk?'Mapa až s vaším súhlasom':'Map available with your consent';const p=document.createElement('p');p.textContent=sk?'Google Mapy sa načítajú až po povolení externého obsahu. Google pritom môže spracovať vašu IP adresu a údaje zariadenia.':'Google Maps loads only after you allow external content. Google may process your IP address and device information.';const b=document.createElement('button');b.type='button';b.textContent=sk?'Nastavenia cookies':'Cookie settings';b.onclick=()=>document.querySelector('.cookie-settings')?.click();gate.append(title,p,b);frame.before(gate);}gate.hidden=on;frame.hidden=!on;if(on&&!frame.hasAttribute('src'))frame.src=frame.dataset.consentSrc;if(!on)frame.removeAttribute('src');});};window.taxiMaps(false);})();
+
 // Basic consent mode: no Google requests before analytics consent.
 (()=>{
- const ID='G-NWBZGGJ5TY',KEY='taxi-analytics-consent-v1',TTL=180*24*60*60*1000;
+ const ID='G-NWBZGGJ5TY',KEY='taxi-analytics-consent-v2',TTL=180*24*60*60*1000;
  const lang=document.documentElement.lang||'sk';
  const copy={
  sk:['Analytické cookies','S vaším súhlasom používame Google Analytics na meranie návštevnosti a kliknutí na kontakty. Voľbu uchovávame 180 dní. Google môže údaje spracúvať aj mimo EÚ.','Povoliť analytiku','Odmietnuť','Nastavenia cookies'],
@@ -32,12 +35,18 @@ const toggle=document.querySelector('.menu-toggle');const nav=document.querySele
  const title=document.createElement('strong');title.textContent=t[0];const text=document.createElement('p');text.textContent=t[1];
  const privacy=document.createElement('a');privacy.href='https://policies.google.com/privacy';privacy.target='_blank';privacy.rel='noopener';privacy.textContent='Google · Privacy';
  const actions=document.createElement('div');actions.className='cookie-actions';
- function choose(value){allowed=value;try{localStorage.setItem(KEY,JSON.stringify({allowed:value,time:Date.now()}));}catch{}if(value)enable();else{window['ga-disable-'+ID]=true;if(loaded)window.gtag('consent','update',{analytics_storage:'denied'});clearCookies();}panel.hidden=true;settings.focus();}
- const accept=document.createElement('button');accept.type='button';accept.textContent=t[2];accept.onclick=()=>choose(true);
- const reject=document.createElement('button');reject.type='button';reject.textContent=t[3];reject.onclick=()=>choose(false);
- actions.append(accept,reject);panel.append(title,text,privacy,actions);document.body.append(panel);
+ const sk=lang==='sk';const options=document.createElement('div');options.className='cookie-options';
+ const analyticsCheck=document.createElement('input');analyticsCheck.type='checkbox';analyticsCheck.checked=saved?.allowed===true;
+ const mapsCheck=document.createElement('input');mapsCheck.type='checkbox';mapsCheck.checked=saved?.maps===true;
+ [[analyticsCheck,sk?'Analytika · Google Analytics':'Analytics · Google Analytics'],[mapsCheck,sk?'Externý obsah · Google Mapy':'External content · Google Maps']].forEach(([input,label])=>{const l=document.createElement('label');l.append(input,document.createTextNode(label));options.append(l);});
+ const notice=document.createElement('a');notice.href='/cookies.html';notice.textContent=sk?'Podrobnosti o cookies a ochrane údajov':'Cookie and privacy details';options.append(notice);
+
+ function choose(value,maps=false){allowed=value;window.taxiMaps(maps);try{localStorage.setItem(KEY,JSON.stringify({allowed:value,maps:maps,time:Date.now()}));}catch{}if(value)enable();else{window['ga-disable-'+ID]=true;if(loaded)window.gtag('consent','update',{analytics_storage:'denied'});clearCookies();}panel.hidden=true;settings.focus();}
+ const accept=document.createElement('button');accept.type='button';accept.textContent=sk?'Uložiť výber':'Save choices';accept.onclick=()=>choose(analyticsCheck.checked,mapsCheck.checked);
+ const reject=document.createElement('button');reject.type='button';reject.textContent=t[3];reject.onclick=()=>{analyticsCheck.checked=false;mapsCheck.checked=false;choose(false,false);};
+ actions.append(accept,reject);panel.append(title,text,options,privacy,actions);document.body.append(panel);
  const settings=document.createElement('button');settings.type='button';settings.className='cookie-settings';settings.textContent=t[4];settings.onclick=()=>{panel.hidden=false;accept.focus();};(document.querySelector('footer')||document.body).append(settings);
- panel.hidden=!!saved;if(saved?.allowed===true)enable();else window['ga-disable-'+ID]=true;
+ panel.hidden=!!saved;window.taxiMaps(saved?.maps===true);if(saved?.allowed===true)enable();else window['ga-disable-'+ID]=true;
  document.addEventListener('click',event=>{const a=event.target.closest?.('a[href]');if(!allowed||!a)return;const href=a.getAttribute('href');const name=href.startsWith('tel:')?'click_phone':href.startsWith('https://wa.me/')?'click_whatsapp':href.startsWith('https://www.facebook.com/1taxipoprad')?'click_facebook':href.startsWith('mailto:')?'click_email':null;if(name)window.gtag('event',name,{page_language:lang,contact_location:a.closest('header')?'header':a.closest('footer')?'footer':a.closest('.floating-contact')?'floating':'content',transport_type:'beacon'});});
 })();
 
