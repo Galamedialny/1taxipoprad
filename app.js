@@ -40,3 +40,25 @@ const toggle=document.querySelector('.menu-toggle');const nav=document.querySele
  panel.hidden=!!saved;if(saved?.allowed===true)enable();else window['ga-disable-'+ID]=true;
  document.addEventListener('click',event=>{const a=event.target.closest?.('a[href]');if(!allowed||!a)return;const href=a.getAttribute('href');const name=href.startsWith('tel:')?'click_phone':href.startsWith('https://wa.me/')?'click_whatsapp':href.startsWith('https://www.facebook.com/1taxipoprad')?'click_facebook':href.startsWith('mailto:')?'click_email':null;if(name)window.gtag('event',name,{page_language:lang,contact_location:a.closest('header')?'header':a.closest('footer')?'footer':a.closest('.floating-contact')?'floating':'content',transport_type:'beacon'});});
 })();
+
+// Contact bar labels and agency credit follow the active page language.
+(()=>{
+ const labels={
+ sk:['Online rezervácia WhatsApp','Zavolať hneď taxi','Sleduj nás Facebook','Web vytvorila mediálna agentúra '],
+ en:['Online booking WhatsApp','Call a taxi now','Follow us on Facebook','Website by media agency '],
+ de:['Online buchen WhatsApp','Jetzt Taxi anrufen','Folge uns auf Facebook','Website erstellt von der Medienagentur '],
+ ru:['Онлайн-бронирование WhatsApp','Вызвать такси сейчас','Мы в Facebook','Сайт создан медиаагентством '],
+ pl:['Rezerwacja online WhatsApp','Zadzwoń po taxi teraz','Obserwuj nas na Facebooku','Stronę stworzyła agencja medialna '],
+ hu:['Online foglalás WhatsApp','Hívjon taxit most','Kövessen a Facebookon','A weboldalt készítette a médiaügynökség '],
+ uk:['Онлайн-бронювання WhatsApp','Викликати таксі зараз','Ми у Facebook','Сайт створено медіаагентством '],
+ it:['Prenota online WhatsApp','Chiama subito un taxi','Seguici su Facebook','Sito creato dall’agenzia media '],
+ fr:['Réservation en ligne WhatsApp','Appelez un taxi maintenant','Suivez-nous sur Facebook','Site créé par l’agence média '],
+ es:['Reserva online WhatsApp','Llama a un taxi ahora','Síguenos en Facebook','Web creada por la agencia de medios '],
+ zh:['WhatsApp 在线预订','立即致电叫车','在 Facebook 关注我们','网站由媒体机构制作 '],
+ ja:['WhatsApp オンライン予約','今すぐタクシーを呼ぶ','Facebook でフォロー','ウェブサイト制作：メディアエージェンシー '],
+ ar:['حجز عبر الإنترنت WhatsApp','اتصل بسيارة أجرة الآن','تابعنا على Facebook','الموقع من إعداد الوكالة الإعلامية ']
+ }[document.documentElement.lang];if(!labels)return;
+ document.querySelectorAll('.floating-contact > a').forEach((a,i)=>{if(i>2)return;const svg=a.querySelector('svg');a.replaceChildren();if(svg)a.append(svg);a.append(document.createTextNode(' '+labels[i]));a.setAttribute('aria-label',labels[i]);});
+ const credit=document.querySelector('.footer-bottom > span:last-child');
+ if(credit){const link=credit.querySelector('a');if(link){link.textContent='GALA MEDIA';credit.replaceChildren(document.createTextNode(labels[3]),link);}}
+})();
